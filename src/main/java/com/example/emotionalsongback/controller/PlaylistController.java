@@ -26,31 +26,35 @@ public class PlaylistController {
     private PlaylistService playlistService;
     private AuthServiceImpl authService;
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping
     public ResponseEntity<PlaylistDto> playlistService(@RequestBody PlaylistDto playlistDto){
         PlaylistDto savedPlaylist = playlistService.addPlaylist(playlistDto);
         return new ResponseEntity<>(savedPlaylist, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("{id}")
     public ResponseEntity<PlaylistDto> getPlaylist(@PathVariable Long id){
         PlaylistDto playlistDto = playlistService.getPlaylist(id);
         return ResponseEntity.ok(playlistDto);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping
     public ResponseEntity<List<PlaylistDto>> getPlaylist(){
         List<PlaylistDto> playlistDto = playlistService.getAllPlaylists();
         return ResponseEntity.ok(playlistDto);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("{id}")
     public ResponseEntity<PlaylistDto> getPlaylist(@RequestBody PlaylistDto playlistDto, @PathVariable Long id){
         PlaylistDto playlistDtoUpdate = playlistService.updatePlaylist(playlistDto,id);
         return ResponseEntity.ok(playlistDtoUpdate);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteTodo(@PathVariable Long id){
         playlistService.deletePlaylist(id);

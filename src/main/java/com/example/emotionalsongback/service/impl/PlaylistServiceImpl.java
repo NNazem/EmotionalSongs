@@ -50,15 +50,24 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public PlaylistDto getPlaylist(Long id) {
 
+        Utente utente = authService.getUtenteFromAuthentication();
+        Set<Playlist> playlists = utente.getPlaylists();
         Playlist playlist = playlistRepository.findById(id).orElseThrow(
                 () -> new APIException(HttpStatus.NOT_FOUND, "Playlist non trovate con l'id: " + id));
+
+        if(!playlists.contains(playlist)){
+            throw new APIException(HttpStatus.UNAUTHORIZED, "Playlist con l'id: " + id +" non associata con l'utente: " + utente.getUsername());
+        }
 
         return modelMapper.map(playlist, PlaylistDto.class);
     }
 
     @Override
     public List<PlaylistDto> getAllPlaylists() {
-        List<Playlist> playlists = playlistRepository.findAll();
+
+        Utente utente = authService.getUtenteFromAuthentication();
+
+        Set<Playlist> playlists = utente.getPlaylists();
         return playlists.stream().map((playlist -> modelMapper.map(playlist, PlaylistDto.class)))
                 .collect(Collectors.toList());
     }
@@ -66,9 +75,15 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public PlaylistDto updatePlaylist(PlaylistDto playlistDto, Long id){
 
+        Utente utente = authService.getUtenteFromAuthentication();
+        Set<Playlist> playlists = utente.getPlaylists();
         Playlist playlist = playlistRepository.findById(id)
                 .orElseThrow(
                         () -> new APIException(HttpStatus.NOT_FOUND, "Playlist non trovate con l'id: " + id));
+
+        if(!playlists.contains(playlist)){
+            throw new APIException(HttpStatus.UNAUTHORIZED, "Playlist con l'id: " + id +" non associata con l'utente: " + utente.getUsername());
+        }
 
         playlist.setName(playlistDto.getName());
 
@@ -79,9 +94,17 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public void deletePlaylist(Long id){
+
+        Utente utente = authService.getUtenteFromAuthentication();
+        Set<Playlist> playlists = utente.getPlaylists();
+
         Playlist playlist = playlistRepository.findById(id)
                 .orElseThrow(
                         () -> new APIException(HttpStatus.NOT_FOUND, "Playlist non trovate con l'id: " + id));
+
+        if(!playlists.contains(playlist)){
+            throw new APIException(HttpStatus.UNAUTHORIZED, "Playlist con l'id: " + id +" non associata con l'utente: " + utente.getUsername());
+        }
 
         playlistRepository.deleteById(id);
     }
