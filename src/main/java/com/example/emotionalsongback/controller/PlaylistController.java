@@ -26,6 +26,12 @@ public class PlaylistController {
     private PlaylistService playlistService;
     private AuthServiceImpl authService;
 
+    /**
+     * Gestisce la richiesta POST per creare una nuova playlist.
+     *
+     * @param playlistDto l'oggetto PlaylistDto che rappresenta la playlist da creare
+     * @return una ResponseEntity che contiene l'oggetto PlaylistDto creato e lo stato HTTP CREATED
+     */
     @PreAuthorize("hasRole('USER')")
     @PostMapping
     public ResponseEntity<PlaylistDto> playlistService(@RequestBody PlaylistDto playlistDto){
@@ -33,6 +39,12 @@ public class PlaylistController {
         return new ResponseEntity<>(savedPlaylist, HttpStatus.CREATED);
     }
 
+    /**
+     * Gestisce la richiesta GET per ottenere una playlist tramite ID.
+     *
+     * @param id l'ID della playlist da ottenere
+     * @return una ResponseEntity che contiene l'oggetto PlaylistDto recuperato e lo stato HTTP OK
+     */
     @PreAuthorize("hasRole('USER')")
     @GetMapping("{id}")
     public ResponseEntity<PlaylistDto> getPlaylist(@PathVariable Long id){
@@ -40,13 +52,25 @@ public class PlaylistController {
         return ResponseEntity.ok(playlistDto);
     }
 
+    /**
+     * Gestisce la richiesta GET per ottenere tutte le playlist.
+     *
+     * @return una ResponseEntity che contiene una lista di oggetti PlaylistDto e lo stato HTTP 200 OK
+     */
     @PreAuthorize("hasRole('USER')")
     @GetMapping
-    public ResponseEntity<List<PlaylistDto>> getPlaylist(){
+    public ResponseEntity<List<PlaylistDto>> getAllPlaylist(){
         List<PlaylistDto> playlistDto = playlistService.getAllPlaylists();
         return ResponseEntity.ok(playlistDto);
     }
 
+    /**
+     * Gestisce la richiesta PUT per modificare una playlist tramite ID.
+     *
+     * @param playlistDto l'oggetto PlaylistDto che rappresenta la playlist modificata
+     * @param id l'ID della playlist da modificare
+     * @return una ResponseEntity che contiene l'oggetto PlaylistDto modificato e lo stato HTTP OK
+     */
     @PreAuthorize("hasRole('USER')")
     @PutMapping("{id}")
     public ResponseEntity<PlaylistDto> getPlaylist(@RequestBody PlaylistDto playlistDto, @PathVariable Long id){
@@ -54,6 +78,12 @@ public class PlaylistController {
         return ResponseEntity.ok(playlistDtoUpdate);
     }
 
+    /**
+     * Gestisce la richiesta DELETE di eliminazione di una playlist per ID.
+     *
+     * @param id l'ID della playlist da eliminare
+     * @return una ResponseEntity che contiene un messaggio di conferma e lo stato HTTP OK
+     */
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteTodo(@PathVariable Long id){

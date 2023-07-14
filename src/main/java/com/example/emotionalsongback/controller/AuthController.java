@@ -8,14 +8,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin("*")
+/**
+ * Controller per la gestione delle operazioni di autenticazione e registrazione degli utenti.
+ */
+@CrossOrigin("*") // Consente le richieste da qualsiasi origine
 @AllArgsConstructor
-@RestController
-@RequestMapping("/api/auth")
+@RestController // Indica che si tratta di un controller REST
+@RequestMapping("/api/auth") //Indica il percorso di base per le richieste HTTP di questo controller
 public class AuthController {
 
     private AuthService authService;
 
+    /**
+     * Gestisce la richiesta di registrazione di un nuovo utente.
+     *
+     * @param registerDto i dati dell'utente da registrare
+     * @return una ResponseEntity che contiene una String di conferma e lo stato HTTP CREATED
+     */
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
         String response = authService.register(registerDto);
@@ -23,6 +32,12 @@ public class AuthController {
     }
 
 
+    /**
+     * Gestisce la richiesta di login di un utente esistente.
+     *
+     * @param loginDto i dati di login dell'utente
+     * @return una ResponseEntity che contiene una String di conferma e lo stato HTTP OK
+     */
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto loginDto){
         String response = authService.login(loginDto);
