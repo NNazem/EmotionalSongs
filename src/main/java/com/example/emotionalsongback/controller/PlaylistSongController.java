@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/playlists/{playlistId}/songs")
+@RequestMapping("/api/playlists/{playlistId}/canzoni")
 @AllArgsConstructor
 public class PlaylistSongController {
 

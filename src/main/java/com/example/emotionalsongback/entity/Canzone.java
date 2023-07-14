@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -23,4 +26,12 @@ public class Canzone {
     private String autore;
     @Column(nullable = false)
     private String anno;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "canzoni_emozioni",
+            joinColumns = @JoinColumn(name = "canzone_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "emozioni_id", referencedColumnName = "id")
+    )
+    private Set<Emozione> emozioni = new HashSet<>();
 }
