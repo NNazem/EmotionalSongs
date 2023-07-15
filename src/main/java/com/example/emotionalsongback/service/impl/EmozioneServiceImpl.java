@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -41,4 +42,40 @@ public class EmozioneServiceImpl implements EmozioneService {
 
         return "Emozione " + emozione.getTipoEmozione() + " associata correttamente.";
     }
+
+    @Override
+    public Set<Emozione> getEmozioni(Long canzoneId) {
+        Canzone canzone = canzoneRepository.findById(canzoneId).orElseThrow(
+                () -> new APIException(HttpStatus.NOT_FOUND, "Canzone non trovata con id: " + canzoneId));
+
+        Set<Emozione> emozioni = canzone.getEmozioni();
+
+        if(emozioni.isEmpty()){
+            throw new APIException(HttpStatus.NOT_FOUND, "Non vi sono emozioni associate alla canzone con id: " + canzoneId);
+        }
+
+        return emozioni;
+    }
+
+    @Override
+    public String deleteEmozione(Long canzoneId, Long emozioneId) {
+
+        Canzone canzone = canzoneRepository.findById(canzoneId).orElseThrow(
+                () -> new APIException(HttpStatus.NOT_FOUND, "Canzone non trovata con id: " + canzoneId));
+
+        Set<Emozione> emozioni = canzone.getEmozioni();
+
+        for(Emozione emozionetmp: emozioni){
+            if(emozionetmp.getId() == emozioneId){
+                emozioni.remove(emozionetmp);
+                canzoneRepository.save(canzone);
+                return "Emozione " + emozionetmp.getTipoEmozione() + " rimossa correttamente.";
+            }
+        }
+
+
+        throw new APIException(HttpStatus.NOT_FOUND, "L'emozione non è associata alla canzone: " + canzoneId);
+    }
+
+
 }
