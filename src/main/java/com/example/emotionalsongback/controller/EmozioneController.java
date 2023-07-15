@@ -16,7 +16,6 @@ import java.util.Set;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/canzone/{canzoneId}/emozioni")
 @AllArgsConstructor
 public class EmozioneController {
 
@@ -24,23 +23,23 @@ public class EmozioneController {
     private EmozioneService emozioneService;
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping
-    public ResponseEntity<String> addEmozione(@PathVariable Long canzoneId,@RequestBody EmozioneDto emozioneDto){
-        String response = emozioneService.addEmozione(canzoneId,emozioneDto);
+    @PostMapping("/api/playlist/{playlistId}/canzone/{canzoneId}/emozioni")
+    public ResponseEntity<String> addEmozione(@PathVariable Long canzoneId, @PathVariable Long playlistId,@RequestBody EmozioneDto emozioneDto){
+        String response = emozioneService.addEmozione(canzoneId,playlistId,emozioneDto);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping
+    @GetMapping("/api/canzone/{canzoneId}/emozioni")
     public ResponseEntity<Set<Emozione>> getEmozioni(@PathVariable Long canzoneId){
         Set<Emozione> emozioniAssociate = emozioneService.getEmozioni(canzoneId);
         return new ResponseEntity<>(emozioniAssociate,HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('USER')")
-    @DeleteMapping("{emozioneId}")
-    public ResponseEntity<String> deleteEmozione(@PathVariable Long canzoneId,@PathVariable Long emozioneId){
-        String response = emozioneService.deleteEmozione(canzoneId,emozioneId);
+    @DeleteMapping("/api/playlist/{playlistId}/canzone/{canzoneId}/emozioni/{emozioneId}")
+    public ResponseEntity<String> deleteEmozione(@PathVariable Long canzoneId, @PathVariable Long playlistId,@PathVariable Long emozioneId){
+        String response = emozioneService.deleteEmozione(canzoneId,playlistId,emozioneId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

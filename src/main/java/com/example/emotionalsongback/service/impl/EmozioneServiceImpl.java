@@ -3,9 +3,14 @@ package com.example.emotionalsongback.service.impl;
 import com.example.emotionalsongback.dto.EmozioneDto;
 import com.example.emotionalsongback.entity.Canzone;
 import com.example.emotionalsongback.entity.Emozione;
+import com.example.emotionalsongback.entity.Playlist;
+import com.example.emotionalsongback.entity.Utente;
 import com.example.emotionalsongback.exception.APIException;
 import com.example.emotionalsongback.repository.CanzoneRepository;
+import com.example.emotionalsongback.repository.PlaylistRepository;
+import com.example.emotionalsongback.service.AuthService;
 import com.example.emotionalsongback.service.EmozioneService;
+import com.example.emotionalsongback.service.PlaylistService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -20,21 +25,42 @@ public class EmozioneServiceImpl implements EmozioneService {
 
     private CanzoneRepository canzoneRepository;
     private ModelMapper modelMapper;
+    private AuthService authService;
+    private PlaylistRepository playlistRepository;
+
     @Override
-    public String addEmozione(Long canzoneId, EmozioneDto emozioneDto) {
+    public String addEmozione(Long canzoneId, Long playlistId, EmozioneDto emozioneDto) {
+
+        Utente utente = authService.getUtenteFromAuthentication();
+        Set<Playlist> playlists = utente.getPlaylists();
+
+        Playlist playlist = playlistRepository.findById(playlistId).orElseThrow(
+                () -> new APIException(HttpStatus.NOT_FOUND, "Playlist non trovate con l'id: " + playlistId)
+        );
+
+        Canzone canzone = canzoneRepository.findById(canzoneId).orElseThrow(
+                () -> new APIException(HttpStatus.NOT_FOUND, "Canzone non trovata con id: " + canzoneId));
+
+        if (!playlists.contains(playlist)) {
+            throw new APIException(HttpStatus.NOT_FOUND, "Playlist con l'id: " + playlistId + " non associata all'utente con id: " + utente.getId());
+        }
+
+        if(!playlist.getCanzoni().contains(canzone)){
+            throw new APIException(HttpStatus.NOT_FOUND, "Playlist con l'id: " + playlistId + " non contiene la canzone con id: " + canzoneId);
+        }
+
         Emozione emozione = new Emozione();
         emozione.setTipoEmozione(emozioneDto.getTipoEmozione());
         emozione.setVoto(emozioneDto.getVoto());
         emozione.setDescrizione(emozioneDto.getDescrizione());
-        Canzone canzone = canzoneRepository.findById(canzoneId).orElseThrow(
-                () -> new APIException(HttpStatus.NOT_FOUND, "Canzone non trovata con id: " + canzoneId));
 
         Set<Emozione> emozioni = canzone.getEmozioni();
 
-        for(Emozione emozionetmp: emozioni){
-            if(emozionetmp.getTipoEmozione() == emozione.getTipoEmozione()){
-                throw new APIException(HttpStatus.CONFLICT, "L'emozione " + emozione.getTipoEmozione() + " è  già associata alla canzone con id: " + canzoneId);
-            }
+        boolean emozionePresente = emozioni.stream()
+                .anyMatch(e -> e.getTipoEmozione() == emozione.getTipoEmozione());
+
+        if (emozionePresente) {
+            throw new APIException(HttpStatus.CONFLICT, "L'emozione " + emozione.getTipoEmozione() + " è già associata alla canzone con id: " + canzoneId);
         }
 
         emozioni.add(emozione);
@@ -50,7 +76,7 @@ public class EmozioneServiceImpl implements EmozioneService {
 
         Set<Emozione> emozioni = canzone.getEmozioni();
 
-        if(emozioni.isEmpty()){
+        if (emozioni.isEmpty()) {
             throw new APIException(HttpStatus.NOT_FOUND, "Non vi sono emozioni associate alla canzone con id: " + canzoneId);
         }
 
@@ -58,23 +84,43 @@ public class EmozioneServiceImpl implements EmozioneService {
     }
 
     @Override
-    public String deleteEmozione(Long canzoneId, Long emozioneId) {
+    public String deleteEmozione(Long canzoneId, Long playlistId, Long emozioneId) {
+
+        Utente utente = authService.getUtenteFromAuthentication();
+        Set<Playlist> playlists = utente.getPlaylists();
+
+        Playlist playlist = playlistRepository.findById(playlistId).orElseThrow(
+                () -> new APIException(HttpStatus.NOT_FOUND, "Playlist non trovate con l'id: " + playlistId)
+        );
 
         Canzone canzone = canzoneRepository.findById(canzoneId).orElseThrow(
                 () -> new APIException(HttpStatus.NOT_FOUND, "Canzone non trovata con id: " + canzoneId));
 
-        Set<Emozione> emozioni = canzone.getEmozioni();
-
-        for(Emozione emozionetmp: emozioni){
-            if(emozionetmp.getId() == emozioneId){
-                emozioni.remove(emozionetmp);
-                canzoneRepository.save(canzone);
-                return "Emozione " + emozionetmp.getTipoEmozione() + " rimossa correttamente.";
-            }
+        if (!playlists.contains(playlist)) {
+            throw new APIException(HttpStatus.NOT_FOUND, "Playlist con l'id: " + playlistId + " non associata all'utente con id: " + utente.getId());
         }
 
+        if(!playlist.getCanzoni().contains(canzone)){
+            throw new APIException(HttpStatus.NOT_FOUND, "Playlist con l'id: " + playlistId + " non contiene la canzone con id: " + canzoneId);
+        }
 
-        throw new APIException(HttpStatus.NOT_FOUND, "L'emozione non è associata alla canzone: " + canzoneId);
+        Set<Emozione> emozioni = canzone.getEmozioni();
+
+        boolean emozioneRimossa = emozioni.stream()
+                .filter(e -> e.getId() == emozioneId)
+                .findFirst()
+                .map(emozioneTrovata -> {
+                    emozioni.remove(emozioneTrovata);
+                    canzoneRepository.save(canzone);
+                    return true;
+                }).orElse(false);
+
+        if(emozioneRimossa){
+            return "Emozione rimossa correttamente.";
+        }else{
+            throw new APIException(HttpStatus.NOT_FOUND, "L'emozione non è associata alla canzone: " + canzoneId);
+        }
+
     }
 
 
