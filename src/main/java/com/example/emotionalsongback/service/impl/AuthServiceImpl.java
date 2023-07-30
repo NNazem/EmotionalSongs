@@ -8,6 +8,7 @@ import com.example.emotionalsongback.entity.Utente;
 import com.example.emotionalsongback.exception.APIException;
 import com.example.emotionalsongback.repository.RoleRepository;
 import com.example.emotionalsongback.repository.UtenteRepository;
+import com.example.emotionalsongback.security.JwtTokenProvider;
 import com.example.emotionalsongback.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -33,6 +34,7 @@ public class AuthServiceImpl implements AuthService {
     private AuthenticationManager authenticationManager;
     private ModelMapper modelMapper;
     private RoleRepository roleRepository;
+    private JwtTokenProvider jwtTokenProvider;
 
 
     @Override
@@ -74,7 +76,9 @@ public class AuthServiceImpl implements AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return "Utente loggato con successo";
+        String token = jwtTokenProvider.generateToken(authentication);
+
+        return token;
     }
 
     public Utente getUtenteFromAuthentication() {

@@ -1,5 +1,7 @@
 package com.example.emotionalsongback.config;
 
+import com.example.emotionalsongback.security.JwtAuthenticationEntryPoint;
+import com.example.emotionalsongback.security.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * Configurazione di Spring Security per l'applicazione.
@@ -23,6 +26,10 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SpringSecurityConfig {
 
     private UserDetailsService userDetailsService;
+
+    private JwtAuthenticationEntryPoint authenticationEntryPoint;
+
+    private JwtAuthenticationFilter authenticationFilter;
 
     /**
      * Bean per la creazione di un oggetto PasswordEncoder che utilizza l'algoritmo di hashing BCrypt.
@@ -44,16 +51,26 @@ public class SpringSecurityConfig {
      * Bean per la creazione di una catena di filtri.
      */
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        // Disabilita la protezione CSRF
-        httpSecurity.csrf().disable()
-                // Imposta le regole di autorizzazione per le richieste HTTP
+        http.csrf().disable()
                 .authorizeHttpRequests((authorize) -> {
+//                    authorize.requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN");
+//                    authorize.requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN");
+//                    authorize.requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN");
+//                    authorize.requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("ADMIN", "USER");
+//                    authorize.requestMatchers(HttpMethod.PATCH, "/api/**").hasAnyRole("ADMIN", "USER");
+//                    authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll();
                     authorize.requestMatchers("/api/auth/**").permitAll();
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     authorize.anyRequest().authenticated();
                 }).httpBasic(Customizer.withDefaults());
-        return httpSecurity.build();
+
+        http.exceptionHandling( exception -> exception
+                .authenticationEntryPoint(authenticationEntryPoint));
+
+        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 }

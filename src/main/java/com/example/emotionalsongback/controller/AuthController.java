@@ -1,5 +1,6 @@
 package com.example.emotionalsongback.controller;
 
+import com.example.emotionalsongback.dto.JwtAuthResponse;
 import com.example.emotionalsongback.dto.LoginDto;
 import com.example.emotionalsongback.dto.RegisterDto;
 import com.example.emotionalsongback.service.AuthService;
@@ -39,8 +40,12 @@ public class AuthController {
      * @return una ResponseEntity che contiene una String di conferma e lo stato HTTP OK
      */
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto){
-        String response = authService.login(loginDto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginDto loginDto){
+        String token = authService.login(loginDto);
+
+        JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+        jwtAuthResponse.setAccessToken(token);
+
+        return new ResponseEntity<>(jwtAuthResponse, HttpStatus.OK);
     }
 }
