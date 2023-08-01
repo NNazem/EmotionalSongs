@@ -106,6 +106,7 @@ public class PlaylistServiceImpl implements PlaylistService {
             throw new APIException(HttpStatus.UNAUTHORIZED, "Playlist con l'id: " + id +" non associata con l'utente: " + utente.getUsername());
         }
 
+        playlists.remove(id);
         playlistRepository.deleteById(id);
     }
 }
