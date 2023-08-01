@@ -34,7 +34,7 @@ public class PlaylistController {
      */
     @PreAuthorize("hasRole('USER')")
     @PostMapping
-    public ResponseEntity<PlaylistDto> playlistService(@RequestBody PlaylistDto playlistDto){
+    public ResponseEntity<PlaylistDto> createPlaylist(@RequestBody PlaylistDto playlistDto){
         PlaylistDto savedPlaylist = playlistService.addPlaylist(playlistDto);
         return new ResponseEntity<>(savedPlaylist, HttpStatus.CREATED);
     }
@@ -57,6 +57,7 @@ public class PlaylistController {
      *
      * @return una ResponseEntity che contiene una lista di oggetti PlaylistDto e lo stato HTTP 200 OK
      */
+
     @PreAuthorize("hasRole('USER')")
     @GetMapping
     public ResponseEntity<List<PlaylistDto>> getAllPlaylist(){
@@ -86,7 +87,7 @@ public class PlaylistController {
      */
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteTodo(@PathVariable Long id){
+    public ResponseEntity<String> deletePlaylist(@PathVariable Long id){
         playlistService.deletePlaylist(id);
         return ResponseEntity.ok("Playlist eliminata con successo");
     }
