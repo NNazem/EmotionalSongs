@@ -74,7 +74,7 @@ public class PlaylistController {
      */
     @PreAuthorize("hasRole('USER')")
     @PutMapping("{id}")
-    public ResponseEntity<PlaylistDto> getPlaylist(@RequestBody PlaylistDto playlistDto, @PathVariable Long id){
+    public ResponseEntity<PlaylistDto> updatePlaylists(@RequestBody PlaylistDto playlistDto, @PathVariable Long id){
         PlaylistDto playlistDtoUpdate = playlistService.updatePlaylist(playlistDto,id);
         return ResponseEntity.ok(playlistDtoUpdate);
     }
