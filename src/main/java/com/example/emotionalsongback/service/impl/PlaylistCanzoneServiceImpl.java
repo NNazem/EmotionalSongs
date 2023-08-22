@@ -10,6 +10,7 @@ import com.example.emotionalsongback.exception.ResourceNotFoundException;
 import com.example.emotionalsongback.repository.CanzoneRepository;
 import com.example.emotionalsongback.repository.PlaylistRepository;
 import com.example.emotionalsongback.service.AuthService;
+import com.example.emotionalsongback.service.CanzoneService;
 import com.example.emotionalsongback.service.PlaylistCanzoneService;
 import com.example.emotionalsongback.service.PlaylistService;
 import lombok.AllArgsConstructor;
@@ -28,13 +29,14 @@ public class PlaylistCanzoneServiceImpl implements PlaylistCanzoneService {
     private CanzoneRepository canzoneRepository;
 
     private PlaylistRepository playlistRepository;
+    private CanzoneService canzoneService;
     private AuthService authService;
 
     ModelMapper modelMapper;
 
 
     @Override
-    public void addCanzoneToPlaylist(Long playlistId, CanzoneDto canzoneDto){
+    public void addCanzoneToPlaylist(Long playlistId, Long canzoneId){
 
         Utente utente = authService.getUtenteFromAuthentication();
         Set<Playlist> playlists = utente.getPlaylists();
@@ -45,6 +47,8 @@ public class PlaylistCanzoneServiceImpl implements PlaylistCanzoneService {
         if(!playlists.contains(playlist)){
             throw new APIException(HttpStatus.UNAUTHORIZED, "Playlist con l'id: " + playlistId +" non associata con l'utente: " + utente.getUsername());
         }
+
+        CanzoneDto canzoneDto = canzoneService.getCanzone(canzoneId);
 
         Canzone canzone = modelMapper.map(canzoneDto, Canzone.class);
         playlist.getCanzoni().add(canzone);

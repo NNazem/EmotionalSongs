@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PlaylistCanzoneService {
 
-    void addCanzoneToPlaylist(Long playlistId, CanzoneDto canzoneDto);
+    void addCanzoneToPlaylist(Long playlistId, Long canzoneId);
 
     void removeCanzoneFromPlaylist(Long playlistId, Long canzoneId);
 

@@ -28,9 +28,9 @@ public class PlaylistSongController {
      */
     @PreAuthorize("hasRole('USER')")
     @PostMapping
-    public ResponseEntity<?> addCanzoneToPlaylist(@PathVariable Long playlistId, @RequestBody CanzoneDto canzoneDto){
-        playlistCanzoneService.addCanzoneToPlaylist(playlistId, canzoneDto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<?> addCanzoneToPlaylist(@PathVariable Long playlistId, @RequestParam("id") Long canzoneId){
+        playlistCanzoneService.addCanzoneToPlaylist(playlistId, canzoneId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     /**
