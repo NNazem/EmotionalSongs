@@ -32,12 +32,18 @@ public class CanzoneServiceImpl implements CanzoneService {
     @Override
     public List<CanzoneDto> getCanzoniByTitolo(String titolo){
         List<Canzone> canzoni = canzoneRepository.findByTitoloContainingIgnoreCase(titolo);
+
+        if(canzoni.isEmpty()) throw new APIException(HttpStatus.NOT_FOUND, "Nessuna canzone corrisponde ai termini di ricerca");
+
         return canzoni.stream().map((canzone -> modelMapper.map(canzone,CanzoneDto.class))).collect(Collectors.toList());
     }
 
     @Override
     public List<CanzoneDto> getCanzoniByAutoreAndAnno(String anno, String autore) {
         List<Canzone> canzoni = canzoneRepository.findByAnnoAndAutoreContainingIgnoreCase(anno,autore);
+
+        if(canzoni.isEmpty()) throw new APIException(HttpStatus.NOT_FOUND, "Nessuna canzone corrisponde ai termini di ricerca");
+
         return canzoni.stream().map((canzone -> modelMapper.map(canzone,CanzoneDto.class))).collect(Collectors.toList());
     }
 
