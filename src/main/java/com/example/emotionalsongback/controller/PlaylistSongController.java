@@ -23,7 +23,6 @@ public class PlaylistSongController {
      * Gestisce la richiesta di aggiunta di una canzone a una playlist.
      *
      * @param playlistId l'ID della playlist a cui aggiungere la canzone
-     * @param canzoneDto l'oggetto CanzoneDto che rappresenta la canzone da aggiungere
      * @return una ResponseEntity con lo stato HTTP CREATED
      */
     @PreAuthorize("hasRole('USER')")

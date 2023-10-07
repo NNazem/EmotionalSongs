@@ -86,7 +86,7 @@ public class PlaylistController {
      */
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteTodo(@PathVariable Long id){
+    public ResponseEntity<String> deletePlaylist(@PathVariable Long id){
         playlistService.deletePlaylist(id);
         return ResponseEntity.ok("Playlist eliminata con successo");
     }

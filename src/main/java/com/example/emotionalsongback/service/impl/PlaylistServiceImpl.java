@@ -65,7 +65,9 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public List<PlaylistDto> getAllPlaylists() {
 
+
         Utente utente = authService.getUtenteFromAuthentication();
+
 
         Set<Playlist> playlists = utente.getPlaylists();
         return playlists.stream().map((playlist -> modelMapper.map(playlist, PlaylistDto.class)))
@@ -106,7 +108,8 @@ public class PlaylistServiceImpl implements PlaylistService {
             throw new APIException(HttpStatus.UNAUTHORIZED, "Playlist con l'id: " + id +" non associata con l'utente: " + utente.getUsername());
         }
 
-        playlists.remove(id);
+        playlists.remove(playlist);
+
         playlistRepository.deleteById(id);
     }
 }
