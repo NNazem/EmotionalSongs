@@ -32,4 +32,6 @@ public class Playlist {
     )
     private Set<Canzone> canzoni = new HashSet<>();
 
+    private int numeroCanzoni;
+
 }

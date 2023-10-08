@@ -18,5 +18,6 @@ public class PlaylistDto {
     private Long id;
     private String name;
     private Set<CanzoneDto> canzoni = new HashSet<>();
+    private int numeroCanzoni;
 
 }

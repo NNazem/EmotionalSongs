@@ -52,6 +52,7 @@ public class PlaylistCanzoneServiceImpl implements PlaylistCanzoneService {
 
         Canzone canzone = modelMapper.map(canzoneDto, Canzone.class);
         playlist.getCanzoni().add(canzone);
+        playlist.setNumeroCanzoni(playlist.getNumeroCanzoni() + 1);
         playlistRepository.save(playlist);
 
 
@@ -77,6 +78,8 @@ public class PlaylistCanzoneServiceImpl implements PlaylistCanzoneService {
         }
 
         playlist.getCanzoni().remove(canzone);
+        playlist.setNumeroCanzoni(playlist.getNumeroCanzoni() - 1);
+
         playlistRepository.save(playlist);
     }
 
