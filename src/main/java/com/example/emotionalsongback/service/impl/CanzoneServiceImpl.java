@@ -8,6 +8,7 @@ import com.example.emotionalsongback.repository.CanzoneRepository;
 import com.example.emotionalsongback.service.CanzoneService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,11 @@ public class CanzoneServiceImpl implements CanzoneService {
     }
 
     @Override
-    public List<CanzoneDto> getCanzoniByTitolo(String titolo){
-        List<Canzone> canzoni = canzoneRepository.findByTitoloContainingIgnoreCase(titolo);
+    public List<CanzoneDto> getCanzoniByTitolo(String titolo, String orderBy, String orderDirection){
+
+        Sort sort = Sort.by(orderDirection.equals("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy);
+
+        List<Canzone> canzoni = canzoneRepository.findByTitoloContainingIgnoreCase(titolo, sort);
 
         if(canzoni.isEmpty()) throw new APIException(HttpStatus.NOT_FOUND, "Nessuna canzone corrisponde ai termini di ricerca");
 

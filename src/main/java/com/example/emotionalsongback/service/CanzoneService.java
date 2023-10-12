@@ -11,7 +11,7 @@ public interface CanzoneService {
 
     CanzoneDto getCanzone(Long id);
 
-    List<CanzoneDto> getCanzoniByTitolo(String titolo);
+    List<CanzoneDto> getCanzoniByTitolo(String titolo, String orderBy, String orderDirection);
 
     List<CanzoneDto> getCanzoniByAutoreAndAnno(String anno, String autore);
 }
