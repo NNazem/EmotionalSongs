@@ -2,6 +2,7 @@ package com.example.emotionalsongback.controller;
 
 import com.example.emotionalsongback.dto.CanzoneDto;
 import com.example.emotionalsongback.exception.ResourceNotFoundException;
+import com.example.emotionalsongback.response.CanzoniResponse;
 import com.example.emotionalsongback.service.CanzoneService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,11 @@ public class CanzoneController {
      * @return una ResponseEntity che contiene una lista di oggetti CanzoneDto e lo stato HTTP OK
      */
     @GetMapping
-    public ResponseEntity<List<CanzoneDto>> getCanzoniByTitolo(@RequestParam("titolo") String titolo,
+    public ResponseEntity<CanzoniResponse> getCanzoniByTitolo(@RequestParam("titolo") String titolo,
                                                                @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy,
-                                                               @RequestParam(value = "orderDirection", required = false, defaultValue = "ASC") String orderDirection){
-        List<CanzoneDto> getCanzoni = canzoneService.getCanzoniByTitolo(titolo, orderBy, orderDirection);
+                                                               @RequestParam(value = "orderDirection", required = false, defaultValue = "ASC") String orderDirection,
+                                                               @RequestParam(value = "page", required = true, defaultValue = "1") String page){
+        CanzoniResponse getCanzoni = canzoneService.getCanzoniByTitolo(titolo, orderBy, orderDirection, page);
         return ResponseEntity.ok(getCanzoni);
     }
 
