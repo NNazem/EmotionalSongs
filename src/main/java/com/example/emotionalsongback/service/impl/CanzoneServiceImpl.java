@@ -63,4 +63,14 @@ public class CanzoneServiceImpl implements CanzoneService {
         return canzoni.stream().map((canzone -> modelMapper.map(canzone, CanzoneDto.class))).collect(Collectors.toList());
     }
 
+    @Override
+    public List<CanzoneDto> getCanzoniByTitoloAndAutore(String titolo, String autore) {
+        List<Canzone> canzoni = canzoneRepository.findByTitoloContainingIgnoreCaseAndAutoreContainingIgnoreCase(titolo, autore);
+
+        if (canzoni.isEmpty())
+            throw new APIException(HttpStatus.NOT_FOUND, "Nessuna canzone corrisponde ai termini di ricerca");
+
+        return canzoni.stream().map((canzone -> modelMapper.map(canzone, CanzoneDto.class))).collect(Collectors.toList());
+    }
+
 }

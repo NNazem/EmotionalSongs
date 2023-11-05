@@ -43,8 +43,14 @@ public class CanzoneController {
      * @return una ResponseEntity che contiene una lista di oggetti CanzoneDto e lo stato HTTP OK
      */
     @GetMapping("/byAutoreAndAnno")
-    public ResponseEntity<List<CanzoneDto>> getCanzoniByAnnoAndAutore(@RequestParam("anno") String anno, @RequestParam String autore){
+    public ResponseEntity<List<CanzoneDto>> getCanzoniByAnnoAndAutore(@RequestParam("anno") String anno, @RequestParam("autore") String autore){
         List<CanzoneDto> getCanzoni = canzoneService.getCanzoniByAutoreAndAnno(anno,autore);
+        return ResponseEntity.ok(getCanzoni);
+    }
+
+    @GetMapping("/byTitoloAndAutore")
+    public ResponseEntity<List<CanzoneDto>> getCanzoniByTitoloAndAutore(@RequestParam("titolo") String titolo, @RequestParam("autore") String autore) {
+        List<CanzoneDto> getCanzoni = canzoneService.getCanzoniByTitoloAndAutore(titolo,autore);
         return ResponseEntity.ok(getCanzoni);
     }
 }
