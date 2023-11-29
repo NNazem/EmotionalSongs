@@ -19,6 +19,8 @@ public interface CanzoneRepository extends JpaRepository<Canzone, Long> {
 
     List<Canzone> findByAnnoAndAutoreContainingIgnoreCase(String anno, String autore);
 
+    Page<Canzone> findAllByAnnoAndAutoreContainingIgnoreCase(String anno, String autore, Pageable pageable);
+
     List<Canzone> findByTitoloContainingIgnoreCaseAndAutoreContainingIgnoreCase(String titolo, String autore);
 
 
