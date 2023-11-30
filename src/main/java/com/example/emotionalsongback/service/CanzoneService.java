@@ -16,5 +16,5 @@ public interface CanzoneService {
 
     CanzoniResponse getCanzoniByAutoreAndAnno(String anno, String autore, String orderBy, String orderDirection, String page);
 
-    List<CanzoneDto> getCanzoniByTitoloAndAutore(String titolo, String autore);
+    CanzoniResponse getCanzoniByTitoloAndAutore(String titolo, String autore, String orderBy, String orderDirection, String page);
 }

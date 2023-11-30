@@ -70,13 +70,20 @@ public class CanzoneServiceImpl implements CanzoneService {
     }
 
     @Override
-    public List<CanzoneDto> getCanzoniByTitoloAndAutore(String titolo, String autore) {
-        List<Canzone> canzoni = canzoneRepository.findByTitoloContainingIgnoreCaseAndAutoreContainingIgnoreCase(titolo, autore);
+    public CanzoniResponse getCanzoniByTitoloAndAutore(String titolo, String autore, String orderBy, String orderDirection, String page) {
 
-        if (canzoni.isEmpty())
+        Sort sort = Sort.by(orderDirection.equals("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC, orderBy);
+        Pageable pageable = PageRequest.of(Integer.parseInt(page)-1, 10, sort);
+
+        Page<Canzone> pagineCanzoni = canzoneRepository.findAllByTitoloContainingIgnoreCaseAndAutoreContainingIgnoreCase(titolo, autore, pageable);
+        long numeroPagine = pagineCanzoni.getTotalPages();
+        long numeroCanzoni = pagineCanzoni.getTotalElements();
+
+
+        if (pagineCanzoni.isEmpty())
             throw new APIException(HttpStatus.NOT_FOUND, "Nessuna canzone corrisponde ai termini di ricerca");
 
-        return canzoni.stream().map((canzone -> modelMapper.map(canzone, CanzoneDto.class))).collect(Collectors.toList());
+        return new CanzoniResponse(pagineCanzoni.stream().map((canzone -> modelMapper.map(canzone, CanzoneDto.class))).collect(Collectors.toList()), numeroPagine, numeroCanzoni);
     }
 
 }
