@@ -9,6 +9,10 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Entity rappresentante una Canzone nel database.
+ * Mappata alla tabella 'canzoni' con relazioni Many-To-Many verso 'Emozione'.
+ */
 @Setter
 @Getter
 @NoArgsConstructor
@@ -17,16 +21,39 @@ import java.util.Set;
 @Table(name = "canzoni")
 public class Canzone {
 
+    /**
+     * Identificativo univoco della canzone.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /**
+     * Titolo della canzone.
+     * Non può essere null.
+     */
     @Column(nullable = false)
     private String titolo;
+
+    /**
+     * Autore della canzone.
+     * Non può essere null.
+     */
     @Column(nullable = false)
     private String autore;
+
+    /**
+     * Anno di pubblicazione della canzone.
+     * Non può essere null.
+     */
     @Column(nullable = false)
     private String anno;
 
+    /**
+     * Insieme di emozioni associate alla canzone.
+     * Inizializzato come un HashSet vuoto.
+     * Gestisce una relazione Many-To-Many con la tabella 'emozioni'.
+     */
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "canzoni_emozioni",

@@ -9,6 +9,10 @@ import lombok.Setter;
 import java.util.Map;
 
 
+/**
+ * Entity rappresentante un'Emozione nel database.
+ * Mappata alla tabella 'emozioni'.
+ */
 @Entity
 @Table(name = "emozioni")
 @Getter
@@ -17,14 +21,34 @@ import java.util.Map;
 @AllArgsConstructor
 public class Emozione {
 
+    /**
+     * Identificativo univoco dell'emozione.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /**
+     * Tipo di emozione.
+     * È un valore enumerato che rappresenta le varie tipologie di emozioni.
+     */
     @Enumerated(EnumType.STRING)
     private TipoEmozione tipoEmozione;
+
+    /**
+     * Voto associato all'emozione.
+     * Può essere utilizzato per quantificare l'emozione.
+     */
     private String voto;
+
+    /**
+     * Descrizione dettagliata dell'emozione da parte dell'utente.
+     */
     private String descrizione;
 
+    /**
+     * Enumerazione che definisce i tipi di emozioni disponibili.
+     */
     public enum TipoEmozione {
         STUPORE,
         TENEREZZA,
