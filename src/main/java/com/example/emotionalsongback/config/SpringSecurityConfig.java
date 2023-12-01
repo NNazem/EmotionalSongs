@@ -52,6 +52,7 @@ public class SpringSecurityConfig {
                 // Imposta le regole di autorizzazione per le richieste HTTP
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/api/auth/**").permitAll();
+                    authorize.requestMatchers("/api/canzone/**").permitAll();
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     authorize.anyRequest().authenticated();
                 }).httpBasic(Customizer.withDefaults());
