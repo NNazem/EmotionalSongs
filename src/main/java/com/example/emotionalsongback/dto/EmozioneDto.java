@@ -16,4 +16,5 @@ public class EmozioneDto {
     private Emozione.TipoEmozione tipoEmozione;
     private String voto;
     private String descrizione;
+
 }

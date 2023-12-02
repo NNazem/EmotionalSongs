@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Map;
 
 
@@ -14,12 +15,14 @@ import java.util.Map;
  * Mappata alla tabella 'emozioni'.
  */
 @Entity
-@Table(name = "emozioni")
+@Table(name = "emozioni", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"id", "idUtente"})
+})
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Emozione {
+public class Emozione implements Serializable {
 
     /**
      * Identificativo univoco dell'emozione.
@@ -27,6 +30,8 @@ public class Emozione {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private Long idUtente;
 
     /**
      * Tipo di emozione.

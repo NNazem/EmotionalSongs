@@ -17,7 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -50,6 +52,7 @@ public class EmozioneServiceImpl implements EmozioneService {
         }
 
         Emozione emozione = new Emozione();
+        emozione.setIdUtente(utente.getId());
         emozione.setTipoEmozione(emozioneDto.getTipoEmozione());
         emozione.setVoto(emozioneDto.getVoto());
         emozione.setDescrizione(emozioneDto.getDescrizione());
@@ -57,7 +60,7 @@ public class EmozioneServiceImpl implements EmozioneService {
         Set<Emozione> emozioni = canzone.getEmozioni();
 
         boolean emozionePresente = emozioni.stream()
-                .anyMatch(e -> e.getTipoEmozione() == emozione.getTipoEmozione());
+                .anyMatch(e -> e.getTipoEmozione() == emozione.getTipoEmozione() && e.getIdUtente() == utente.getId());
 
         if (emozionePresente) {
             throw new APIException(HttpStatus.CONFLICT, "L'emozione " + emozione.getTipoEmozione() + " è già associata alla canzone con id: " + canzoneId);
@@ -70,18 +73,48 @@ public class EmozioneServiceImpl implements EmozioneService {
     }
 
     @Override
-    public Set<Emozione> getEmozioni(Long canzoneId) {
+    public Map<Emozione.TipoEmozione, Record> getEmozioni(Long canzoneId) {
+
+        Utente utente = authService.getUtenteFromAuthentication();
+
         Canzone canzone = canzoneRepository.findById(canzoneId).orElseThrow(
                 () -> new APIException(HttpStatus.NOT_FOUND, "Canzone non trovata con id: " + canzoneId));
 
         Set<Emozione> emozioni = canzone.getEmozioni();
 
+
         if (emozioni.isEmpty()) {
             throw new APIException(HttpStatus.NOT_FOUND, "Non vi sono emozioni associate alla canzone con id: " + canzoneId);
         }
 
-        return emozioni;
+        record votoEmozione(double media, double voto){};
+
+        Map<Emozione.TipoEmozione, Double> votiGlobali = emozioni.stream().
+                collect(Collectors.groupingBy(Emozione::getTipoEmozione,
+                Collectors.averagingInt(e -> Integer.parseInt(e.getVoto()))));
+
+
+        Map<Emozione.TipoEmozione, Record> votiUtenteConMedia = votiGlobali.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> {
+                            Emozione.TipoEmozione tipo = entry.getKey();
+                            Double mediaVoti = entry.getValue();
+                            Double votoUtente = emozioni.stream()
+                                    .filter(e -> e.getIdUtente().equals(utente.getId()) && e.getTipoEmozione().equals(tipo))
+                                    .findFirst()
+                                    .map(Emozione::getVoto)
+                                    .map(Double::parseDouble)
+                                    .orElse(-1.0);
+                            return new votoEmozione(mediaVoti, votoUtente);
+                        }
+                ));
+
+        return votiUtenteConMedia;
+
+
     }
+
 
     @Override
     public String deleteEmozione(Long canzoneId, Long playlistId, Long emozioneId) {

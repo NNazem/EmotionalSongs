@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CanzoneDto {
     private Long id;
+    private long idUtente;
     private String titolo;
     private String autore;
     private String anno;

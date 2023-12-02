@@ -53,6 +53,7 @@ public class Canzone {
      * Insieme di emozioni associate alla canzone.
      * Inizializzato come un HashSet vuoto.
      * Gestisce una relazione Many-To-Many con la tabella 'emozioni'.
+     * 
      */
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(

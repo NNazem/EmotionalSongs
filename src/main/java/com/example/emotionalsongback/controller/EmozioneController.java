@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -50,8 +51,8 @@ public class EmozioneController {
      */
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/api/canzone/{canzoneId}/emozioni")
-    public ResponseEntity<Set<Emozione>> getEmozioni(@PathVariable Long canzoneId){
-        Set<Emozione> emozioniAssociate = emozioneService.getEmozioni(canzoneId);
+    public ResponseEntity<Map<Emozione.TipoEmozione, Record>> getEmozioni(@PathVariable Long canzoneId){
+        Map<Emozione.TipoEmozione, Record> emozioniAssociate = emozioneService.getEmozioni(canzoneId);
         return new ResponseEntity<>(emozioniAssociate, HttpStatus.OK);
     }
 
@@ -70,4 +71,6 @@ public class EmozioneController {
         String response = emozioneService.deleteEmozione(canzoneId, playlistId, emozioneId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+
 }
