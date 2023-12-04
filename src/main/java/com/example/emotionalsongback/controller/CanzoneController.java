@@ -82,6 +82,12 @@ public class CanzoneController {
         return ResponseEntity.ok(getCanzoni);
     }
 
+    /**
+     * Ottiene la canzone con l'ID selezionato
+     *
+     * @param id L'id della canzone
+     * @return ResponseEntity contenente CanzoneDto e lo stato HTTP OK.
+     */
     @GetMapping("/byId")
     public ResponseEntity<CanzoneDto> getCanzoneById(@RequestParam("id")String id){
         CanzoneDto getCanzone = canzoneService.getCanzone(Long.valueOf(id));
