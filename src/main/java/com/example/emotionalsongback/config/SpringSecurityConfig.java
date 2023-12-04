@@ -47,9 +47,7 @@ public class SpringSecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
 
 
-        // Disabilita la protezione CSRF
         httpSecurity.csrf().disable()
-                // Imposta le regole di autorizzazione per le richieste HTTP
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/api/auth/**").permitAll();
                     authorize.requestMatchers("/api/canzone/**").permitAll();

@@ -34,11 +34,15 @@ public class PlaylistServiceImpl implements PlaylistService {
     public PlaylistDto addPlaylist(PlaylistDto playlistDto) {
 
         Playlist playlist = modelMapper.map(playlistDto, Playlist.class);
-
-        Playlist savedPlaylist = playlistRepository.save(playlist);
-
         Utente utente = authService.getUtenteFromAuthentication();
         Set<Playlist> playlistsUtente = utente.getPlaylists();
+
+        for(Playlist playlistTmp : playlistsUtente) {
+            if(playlistTmp.getName().equals(playlist.getName())){
+                throw new APIException(HttpStatus.UNAUTHORIZED, "Playlist con questo nome già esistente: " + playlist.getName());
+            }
+        }
+            Playlist savedPlaylist = playlistRepository.save(playlist);
         playlistsUtente.add(savedPlaylist);
         utenteRepository.save(utente);
 
@@ -49,6 +53,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     public PlaylistDto getPlaylist(Long id) {
+
 
         Utente utente = authService.getUtenteFromAuthentication();
         Set<Playlist> playlists = utente.getPlaylists();

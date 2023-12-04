@@ -82,4 +82,10 @@ public class CanzoneController {
         return ResponseEntity.ok(getCanzoni);
     }
 
+    @GetMapping("/byId")
+    public ResponseEntity<CanzoneDto> getCanzoneById(@RequestParam("id")String id){
+        CanzoneDto getCanzone = canzoneService.getCanzone(Long.valueOf(id));
+        return ResponseEntity.ok(getCanzone);
+    }
+
 }

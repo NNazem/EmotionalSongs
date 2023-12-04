@@ -26,6 +26,7 @@ public class Playlist {
      * Identificativo univoco della playlist.
      */
     @Id
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
