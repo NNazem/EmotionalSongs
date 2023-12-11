@@ -2,7 +2,6 @@ package com.example.emotionalsongback.controller;
 
 import com.example.emotionalsongback.dto.CanzoneDto;
 import com.example.emotionalsongback.dto.PlaylistDto;
-import com.example.emotionalsongback.exception.ResourceNotFoundException;
 import com.example.emotionalsongback.service.PlaylistCanzoneService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

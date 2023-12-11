@@ -1,16 +1,12 @@
 package com.example.emotionalsongback.controller;
 
 import com.example.emotionalsongback.dto.CanzoneDto;
-import com.example.emotionalsongback.exception.ResourceNotFoundException;
 import com.example.emotionalsongback.response.CanzoniResponse;
 import com.example.emotionalsongback.service.CanzoneService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  * Controller per la gestione delle richieste relative alle canzoni.
@@ -37,7 +33,7 @@ public class CanzoneController {
     public ResponseEntity<CanzoniResponse> getCanzoniByTitolo(@RequestParam("titolo") String titolo,
                                                               @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy,
                                                               @RequestParam(value = "orderDirection", required = false, defaultValue = "ASC") String orderDirection,
-                                                              @RequestParam(value = "page", required = true, defaultValue = "1") String page){
+                                                              @RequestParam(value = "page", defaultValue = "1") String page){
         CanzoniResponse getCanzoni = canzoneService.getCanzoniByTitolo(titolo, orderBy, orderDirection, page);
         return ResponseEntity.ok(getCanzoni);
     }
@@ -57,7 +53,7 @@ public class CanzoneController {
                                                                      @RequestParam("autore") String autore,
                                                                      @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy,
                                                                      @RequestParam(value = "orderDirection", required = false, defaultValue = "ASC") String orderDirection,
-                                                                     @RequestParam(value = "page", required = true, defaultValue = "1") String page){
+                                                                     @RequestParam(value = "page", defaultValue = "1") String page){
         CanzoniResponse getCanzoni = canzoneService.getCanzoniByAutoreAndAnno(anno,autore, orderBy, orderDirection, page);
         return ResponseEntity.ok(getCanzoni);
     }
@@ -77,7 +73,7 @@ public class CanzoneController {
                                                                         @RequestParam("autore") String autore,
                                                                         @RequestParam(value = "orderBy", required = false, defaultValue = "id") String orderBy,
                                                                         @RequestParam(value = "orderDirection", required = false, defaultValue = "ASC") String orderDirection,
-                                                                        @RequestParam(value = "page", required = true, defaultValue = "1") String page) {
+                                                                        @RequestParam(value = "page", defaultValue = "1") String page) {
         CanzoniResponse getCanzoni = canzoneService.getCanzoniByTitoloAndAutore(titolo,autore, orderBy, orderDirection, page);
         return ResponseEntity.ok(getCanzoni);
     }

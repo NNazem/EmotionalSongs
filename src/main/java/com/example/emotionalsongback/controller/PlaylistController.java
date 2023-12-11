@@ -2,17 +2,11 @@ package com.example.emotionalsongback.controller;
 
 
 import com.example.emotionalsongback.dto.PlaylistDto;
-import com.example.emotionalsongback.entity.Playlist;
-import com.example.emotionalsongback.entity.Utente;
-import com.example.emotionalsongback.exception.ResourceNotFoundException;
 import com.example.emotionalsongback.service.PlaylistService;
-import com.example.emotionalsongback.service.impl.AuthServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +18,6 @@ import java.util.List;
 public class PlaylistController {
 
     private PlaylistService playlistService;
-    private AuthServiceImpl authService;
 
     /**
      * Gestisce la richiesta POST per creare una nuova playlist.

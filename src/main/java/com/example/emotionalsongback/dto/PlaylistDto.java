@@ -1,7 +1,5 @@
 package com.example.emotionalsongback.dto;
 
-import com.example.emotionalsongback.entity.Canzone;
-import com.example.emotionalsongback.entity.Utente;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

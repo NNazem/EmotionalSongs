@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -87,7 +88,7 @@ public class EmozioneServiceImpl implements EmozioneService {
             throw new APIException(HttpStatus.NOT_FOUND, "Non vi sono emozioni associate alla canzone con id: " + canzoneId);
         }
 
-        record votoEmozione(double media, double voto){};
+        record votoEmozione(double media, double voto, String commento){};
 
         Map<Emozione.TipoEmozione, Double> votiGlobali = emozioni.stream().
                 collect(Collectors.groupingBy(Emozione::getTipoEmozione,
@@ -100,13 +101,25 @@ public class EmozioneServiceImpl implements EmozioneService {
                         entry -> {
                             Emozione.TipoEmozione tipo = entry.getKey();
                             Double mediaVoti = entry.getValue();
-                            Double votoUtente = emozioni.stream()
+
+                            Optional<Emozione> emozioneUtente = emozioni.stream()
                                     .filter(e -> e.getIdUtente().equals(utente.getId()) && e.getTipoEmozione().equals(tipo))
-                                    .findFirst()
-                                    .map(Emozione::getVoto)
-                                    .map(Double::parseDouble)
-                                    .orElse(-1.0);
-                            return new votoEmozione(mediaVoti, votoUtente);
+                                    .findFirst();
+
+                            Double votoUtente;
+                            String commento;
+
+                            if(emozioneUtente.isPresent()){
+                                 votoUtente = Double.valueOf(emozioneUtente.get().getVoto());
+                                 commento = emozioneUtente.get().getDescrizione();
+                            }else{
+                                 votoUtente = -1.0;
+                                 commento = "";
+
+                            }
+
+                            return new votoEmozione(mediaVoti, votoUtente, commento);
+
                         }
                 ));
 

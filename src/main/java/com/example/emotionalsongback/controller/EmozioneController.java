@@ -2,18 +2,14 @@ package com.example.emotionalsongback.controller;
 
 import com.example.emotionalsongback.dto.EmozioneDto;
 import com.example.emotionalsongback.entity.Emozione;
-import com.example.emotionalsongback.repository.EmozioneRepository;
 import com.example.emotionalsongback.service.EmozioneService;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Controller per la gestione delle emozioni associate alle canzoni nelle playlist.
