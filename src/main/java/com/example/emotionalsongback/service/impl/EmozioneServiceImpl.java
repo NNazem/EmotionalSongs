@@ -16,10 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,11 +85,12 @@ public class EmozioneServiceImpl implements EmozioneService {
             throw new APIException(HttpStatus.NOT_FOUND, "Non vi sono emozioni associate alla canzone con id: " + canzoneId);
         }
 
-        record votoEmozione(double media, double voto, String commento){};
+        record votoEmozione(double media, double voto, String commentoUtente, List<String> commentiUtenti){};
 
         Map<Emozione.TipoEmozione, Double> votiGlobali = emozioni.stream().
                 collect(Collectors.groupingBy(Emozione::getTipoEmozione,
                 Collectors.averagingInt(e -> Integer.parseInt(e.getVoto()))));
+
 
 
         Map<Emozione.TipoEmozione, Record> votiUtenteConMedia = votiGlobali.entrySet().stream()
@@ -107,18 +105,23 @@ public class EmozioneServiceImpl implements EmozioneService {
                                     .findFirst();
 
                             Double votoUtente;
-                            String commento;
+                            String commentoUtente;
 
                             if(emozioneUtente.isPresent()){
                                  votoUtente = Double.valueOf(emozioneUtente.get().getVoto());
-                                 commento = emozioneUtente.get().getDescrizione();
+                                 commentoUtente = emozioneUtente.get().getDescrizione();
                             }else{
                                  votoUtente = -1.0;
-                                 commento = "";
-
+                                 commentoUtente = "";
                             }
 
-                            return new votoEmozione(mediaVoti, votoUtente, commento);
+                            List<String> commentiUtenti = emozioni.stream().
+                                    filter(e -> !e.getIdUtente().equals(utente.getId()) && e.getTipoEmozione().equals(tipo))
+                                    .map(Emozione::getDescrizione)
+                                    .collect(Collectors.toList());
+
+
+                            return new votoEmozione(mediaVoti, votoUtente, commentoUtente, commentiUtenti);
 
                         }
                 ));
