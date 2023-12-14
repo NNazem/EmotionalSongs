@@ -85,7 +85,7 @@ public class EmozioneServiceImpl implements EmozioneService {
             throw new APIException(HttpStatus.NOT_FOUND, "Non vi sono emozioni associate alla canzone con id: " + canzoneId);
         }
 
-        record votoEmozione(double media, double voto, String commentoUtente, List<String> commentiUtenti) {
+        record votoEmozione(Emozione.TipoEmozione tipoEmozione, double media, double voto, String commentoUtente, List<String> commentiUtenti) {
         }
         ;
 
@@ -127,7 +127,7 @@ public class EmozioneServiceImpl implements EmozioneService {
                                     .collect(Collectors.toList());
 
 
-                            return new votoEmozione(mediaVoti, votoUtente, commentoUtente, commentiUtenti);
+                            return new votoEmozione(tipo,mediaVoti, votoUtente, commentoUtente, commentiUtenti);
 
                         }
                 ));
