@@ -45,7 +45,7 @@ public class EmozioneServiceImpl implements EmozioneService {
             throw new APIException(HttpStatus.NOT_FOUND, "Playlist con l'id: " + playlistId + " non associata all'utente con id: " + utente.getId());
         }
 
-        if(!playlist.getCanzoni().contains(canzone)){
+        if (!playlist.getCanzoni().contains(canzone)) {
             throw new APIException(HttpStatus.NOT_FOUND, "Playlist con l'id: " + playlistId + " non contiene la canzone con id: " + canzoneId);
         }
 
@@ -85,12 +85,13 @@ public class EmozioneServiceImpl implements EmozioneService {
             throw new APIException(HttpStatus.NOT_FOUND, "Non vi sono emozioni associate alla canzone con id: " + canzoneId);
         }
 
-        record votoEmozione(double media, double voto, String commentoUtente, List<String> commentiUtenti){};
+        record votoEmozione(double media, double voto, String commentoUtente, List<String> commentiUtenti) {
+        }
+        ;
 
         Map<Emozione.TipoEmozione, Double> votiGlobali = emozioni.stream().
                 collect(Collectors.groupingBy(Emozione::getTipoEmozione,
-                Collectors.averagingInt(e -> Integer.parseInt(e.getVoto()))));
-
+                        Collectors.averagingInt(e -> Integer.parseInt(e.getVoto()))));
 
 
         Map<Emozione.TipoEmozione, Record> votiUtenteConMedia = votiGlobali.entrySet().stream()
@@ -100,23 +101,28 @@ public class EmozioneServiceImpl implements EmozioneService {
                             Emozione.TipoEmozione tipo = entry.getKey();
                             Double mediaVoti = entry.getValue();
 
-                            Optional<Emozione> emozioneUtente = emozioni.stream()
-                                    .filter(e -> e.getIdUtente().equals(utente.getId()) && e.getTipoEmozione().equals(tipo))
-                                    .findFirst();
+
+                            Optional<Emozione> emozioneUtente = Optional.empty();
+
+                            if (utente != null) {
+                                emozioneUtente = emozioni.stream()
+                                        .filter(e -> e.getIdUtente().equals(utente.getId()) && e.getTipoEmozione().equals(tipo))
+                                        .findFirst();
+                            }
 
                             Double votoUtente;
                             String commentoUtente;
 
-                            if(emozioneUtente.isPresent()){
-                                 votoUtente = Double.valueOf(emozioneUtente.get().getVoto());
-                                 commentoUtente = emozioneUtente.get().getDescrizione();
-                            }else{
-                                 votoUtente = -1.0;
-                                 commentoUtente = "";
+                            if (emozioneUtente.isPresent()) {
+                                votoUtente = Double.valueOf(emozioneUtente.get().getVoto());
+                                commentoUtente = emozioneUtente.get().getDescrizione();
+                            } else {
+                                votoUtente = -1.0;
+                                commentoUtente = "";
                             }
 
                             List<String> commentiUtenti = emozioni.stream().
-                                    filter(e -> !e.getIdUtente().equals(utente.getId()) && e.getTipoEmozione().equals(tipo))
+                                    filter(e ->   e.getTipoEmozione().equals(tipo) && (utente == null || !e.getIdUtente().equals(utente.getId())))
                                     .map(Emozione::getDescrizione)
                                     .collect(Collectors.toList());
 
@@ -149,7 +155,7 @@ public class EmozioneServiceImpl implements EmozioneService {
             throw new APIException(HttpStatus.NOT_FOUND, "Playlist con l'id: " + playlistId + " non associata all'utente con id: " + utente.getId());
         }
 
-        if(!playlist.getCanzoni().contains(canzone)){
+        if (!playlist.getCanzoni().contains(canzone)) {
             throw new APIException(HttpStatus.NOT_FOUND, "Playlist con l'id: " + playlistId + " non contiene la canzone con id: " + canzoneId);
         }
 
@@ -164,9 +170,9 @@ public class EmozioneServiceImpl implements EmozioneService {
                     return true;
                 }).orElse(false);
 
-        if(emozioneRimossa){
+        if (emozioneRimossa) {
             return "Emozione rimossa correttamente.";
-        }else{
+        } else {
             throw new APIException(HttpStatus.NOT_FOUND, "L'emozione non è associata alla canzone: " + canzoneId);
         }
 

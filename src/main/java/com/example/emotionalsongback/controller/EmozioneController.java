@@ -3,6 +3,7 @@ package com.example.emotionalsongback.controller;
 import com.example.emotionalsongback.dto.EmozioneDto;
 import com.example.emotionalsongback.entity.Emozione;
 import com.example.emotionalsongback.service.EmozioneService;
+import jakarta.annotation.security.PermitAll;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,6 @@ public class EmozioneController {
      * @param canzoneId Identificativo della canzone.
      * @return ResponseEntity contenente un set di emozioni associate e status HTTP OK.
      */
-    @PreAuthorize("hasRole('USER')")
     @GetMapping("/api/canzone/{canzoneId}/emozioni")
     public ResponseEntity<Map<Emozione.TipoEmozione, Record>> getEmozioni(@PathVariable Long canzoneId){
         Map<Emozione.TipoEmozione, Record> emozioniAssociate = emozioneService.getEmozioni(canzoneId);
