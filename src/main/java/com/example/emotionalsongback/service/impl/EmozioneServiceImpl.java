@@ -57,14 +57,18 @@ public class EmozioneServiceImpl implements EmozioneService {
 
         Set<Emozione> emozioni = canzone.getEmozioni();
 
-        boolean emozionePresente = emozioni.stream()
-                .anyMatch(e -> e.getTipoEmozione() == emozione.getTipoEmozione() && e.getIdUtente() == utente.getId());
+        Optional<Emozione> existingEmozione = emozioni.stream()
+                .filter(e -> e.getTipoEmozione() == emozione.getTipoEmozione() && e.getIdUtente() == utente.getId())
+                .findFirst();
 
-        if (emozionePresente) {
-            throw new APIException(HttpStatus.CONFLICT, "L'emozione " + emozione.getTipoEmozione() + " è già associata alla canzone con id: " + canzoneId);
+        if (existingEmozione.isPresent()) {
+            Emozione emozioneToUpdate = existingEmozione.get();
+            emozioneToUpdate.setVoto(emozioneDto.getVoto());
+            emozioneToUpdate.setDescrizione(emozioneDto.getDescrizione());
+        } else {
+            emozioni.add(emozione);
         }
 
-        emozioni.add(emozione);
         canzoneRepository.save(canzone);
 
         return "Emozione " + emozione.getTipoEmozione() + " associata correttamente.";
