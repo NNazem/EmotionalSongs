@@ -28,6 +28,16 @@ The Emotional Songs Backend is a Spring application that provides APIs to manage
 4. Run the application: `mvn spring-boot:run`
 5. The application will be available at `http://localhost:8080`
 
+## Database Configuration
+
+To run the Emotional Songs Backend, you need to configure the database connection in the `application.properties` file located at:
+EmotionalSongs-server/src/main/resources/application.properties
+
+Update the following properties with your database credentials:
+spring.datasource.url=your_database
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+
 ## License
 
 This project is released under the MIT License. See the [LICENSE](LICENSE) file for details.
