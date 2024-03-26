@@ -14,7 +14,9 @@ The Emotional Songs Backend is a Spring application that provides APIs to manage
 - Java
 - Spring Boot
 - Spring Data JPA
-- PostgreSQL (or other database)
+- Spring Security
+- Lombok
+- PostgreSQL
 - Maven
 
 ## Getting Started
