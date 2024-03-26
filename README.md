@@ -1,6 +1,6 @@
 # Emotional Songs Backend
 
-The Emotional Songs Backend is a Spring application that provides APIs to manage a collection of songs and their associated emotions. It is part of a university project along with the [Emotional Songs Frontend](link-to-frontend-repo).
+The Emotional Songs Backend is a Spring application that provides APIs to manage a collection of songs and their associated emotions. It is part of a university project along with the [Emotional Songs Frontend](https://github.com/NNazem/EmotionalSongs-front).
 
 ## Key Features
 
