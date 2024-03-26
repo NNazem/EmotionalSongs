@@ -5,6 +5,7 @@ The Emotional Songs Backend is a Spring application that provides APIs to manage
 ## Key Features
 
 - Retrieve songs from a database
+- Creating playlists
 - Assign emotions, and their associated rate, to songs
 - Search songs by title or author and year
 - User account creation and authentication
