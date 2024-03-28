@@ -37,7 +37,3 @@ Update the following properties with your database credentials:
 spring.datasource.url=your_database
 spring.datasource.username=your_username
 spring.datasource.password=your_password
-
-## License
-
-This project is released under the MIT License. See the [LICENSE](LICENSE) file for details.
